@@ -117,6 +117,7 @@
       height: 100%;
       width: 0%;
       background: #222;
+      transition: width 0.3s ease;
     }
 
     .message {
@@ -128,6 +129,34 @@
       margin-top: 20px;
       padding-top: 20px;
       border-top: 1px solid #eee;
+    }
+
+    .activity-list {
+      margin-top: 18px;
+    }
+
+    .activity-item {
+      background: #fafafa;
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 10px;
+      border: 1px solid #eee;
+    }
+
+    .activity-item strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .activity-meta {
+      color: #777;
+      font-size: 13px;
+      margin-top: 5px;
+    }
+
+    .empty-history {
+      color: #777;
+      margin-top: 15px;
     }
 
     footer {
@@ -191,6 +220,8 @@
   <!-- DASHBOARD -->
 
   <section id="dashboard" class="hidden">
+
+    <!-- PROFILE -->
 
     <div class="card">
 
@@ -361,6 +392,28 @@
           class="message"
         ></div>
 
+      </div>
+
+    </div>
+
+
+    <!-- ACTIVITY HISTORY -->
+
+    <div class="card">
+
+      <h2>📜 My Activity History</h2>
+
+      <p style="margin-top:8px;color:#666;">
+        Your recently recorded streaming and voting activities.
+      </p>
+
+      <div
+        id="activityHistory"
+        class="activity-list"
+      >
+        <p class="empty-history">
+          Loading activity history...
+        </p>
       </div>
 
     </div>
@@ -593,6 +646,11 @@ async function loadDashboard() {
 
   if (campaignError || !campaign) {
 
+    document
+      .getElementById("activityHistory")
+      .innerHTML =
+      "<p class='empty-history'>No active campaign found.</p>";
+
     return;
 
   }
@@ -625,14 +683,24 @@ async function loadDashboard() {
   } =
     await supabaseClient
       .from("activities")
-      .select("platform, amount")
+      .select(
+        "platform, item_name, activity_type, amount, activity_date"
+      )
       .eq("fan_id", user.id)
-      .eq("campaign_id", campaign.id);
+      .eq("campaign_id", campaign.id)
+      .order("activity_date", {
+        ascending: false
+      });
 
 
   if (activityError) {
 
     console.error(activityError);
+
+    document
+      .getElementById("activityHistory")
+      .innerHTML =
+      "<p class='empty-history'>Unable to load activity history.</p>";
 
     return;
 
@@ -683,7 +751,7 @@ async function loadDashboard() {
   });
 
 
-  /* DISPLAY GOALS AND PROGRESS */
+  /* DISPLAY GOALS */
 
   goals.forEach(goal => {
 
@@ -762,6 +830,93 @@ async function loadDashboard() {
       .getElementById(progressId)
       .style.width =
       percentage + "%";
+
+  });
+
+
+  /* DISPLAY ACTIVITY HISTORY */
+
+  displayActivityHistory(activities);
+
+}
+
+
+/* DISPLAY ACTIVITY HISTORY */
+
+function displayActivityHistory(activities) {
+
+  const history =
+    document.getElementById(
+      "activityHistory"
+    );
+
+
+  if (!activities || activities.length === 0) {
+
+    history.innerHTML =
+      "<p class='empty-history'>You haven't recorded any activities yet.</p>";
+
+    return;
+
+  }
+
+
+  history.innerHTML = "";
+
+
+  activities.forEach(activity => {
+
+    const item =
+      document.createElement("div");
+
+
+    item.className =
+      "activity-item";
+
+
+    const title =
+      document.createElement("strong");
+
+
+    title.textContent =
+      activity.platform +
+      " — " +
+      activity.item_name;
+
+
+    const amount =
+      document.createElement("div");
+
+
+    amount.textContent =
+      "Amount: " +
+      activity.amount;
+
+
+    const meta =
+      document.createElement("div");
+
+
+    meta.className =
+      "activity-meta";
+
+
+    meta.textContent =
+      (activity.activity_type === "vote"
+        ? "Voting"
+        : "Streaming") +
+      " • " +
+      activity.activity_date;
+
+
+    item.appendChild(title);
+
+    item.appendChild(amount);
+
+    item.appendChild(meta);
+
+
+    history.appendChild(item);
 
   });
 
