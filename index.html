@@ -45,13 +45,15 @@
       box-shadow: 0 4px 20px rgba(0,0,0,.06);
     }
 
-    input {
+    input,
+    select {
       width: 100%;
       padding: 13px;
       margin: 8px 0;
       border: 1px solid #ddd;
       border-radius: 10px;
       font-size: 15px;
+      background: white;
     }
 
     button {
@@ -120,6 +122,12 @@
     .message {
       margin-top: 12px;
       color: #666;
+    }
+
+    .activity-form {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
     }
 
     footer {
@@ -207,6 +215,8 @@
     </div>
 
 
+    <!-- WEEKLY GOALS -->
+
     <div class="card">
 
       <h2>🎯 This Week's Goals</h2>
@@ -272,6 +282,89 @@
 
     </div>
 
+
+    <!-- ACTIVITY LOGGER -->
+
+    <div class="card">
+
+      <h2>📊 Log Your Activity</h2>
+
+      <p style="margin-top:8px;color:#666;">
+        Record your individual streaming or voting activity.
+      </p>
+
+      <div class="activity-form">
+
+        <label>Platform</label>
+
+        <select id="activityPlatform">
+
+          <option value="">
+            Select platform
+          </option>
+
+          <option value="Spotify">
+            Spotify
+          </option>
+
+          <option value="YouTube">
+            YouTube
+          </option>
+
+          <option value="YouTube Music">
+            YouTube Music
+          </option>
+
+          <option value="Apple Music">
+            Apple Music
+          </option>
+
+          <option value="Voting">
+            Voting
+          </option>
+
+          <option value="Other">
+            Other
+          </option>
+
+        </select>
+
+
+        <label>Song / Video / Activity</label>
+
+        <input
+          type="text"
+          id="activityItem"
+          placeholder="Enter the song or activity"
+        >
+
+
+        <label>Number of streams/actions</label>
+
+        <input
+          type="number"
+          id="activityAmount"
+          min="1"
+          placeholder="Example: 10"
+        >
+
+
+        <button
+          class="primary"
+          onclick="saveActivity()"
+        >
+          Save Activity
+        </button>
+
+        <div
+          id="activityMessage"
+          class="message"
+        ></div>
+
+      </div>
+
+    </div>
+
   </section>
 
 </main>
@@ -282,15 +375,18 @@
 </footer>
 
 
+<!-- SUPABASE -->
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase.js"></script>
+
 
 <script>
 
 async function signUp() {
 
   const email =
-    document.getElementById("email").value;
+    document.getElementById("email").value.trim();
 
   const password =
     document.getElementById("password").value;
@@ -306,7 +402,7 @@ async function signUp() {
     return;
   }
 
-  const { data, error } =
+  const { error } =
     await supabaseClient.auth.signUp({
       email: email,
       password: password
@@ -329,7 +425,7 @@ async function signUp() {
 async function signIn() {
 
   const email =
-    document.getElementById("email").value;
+    document.getElementById("email").value.trim();
 
   const password =
     document.getElementById("password").value;
@@ -337,7 +433,7 @@ async function signIn() {
   const message =
     document.getElementById("authMessage");
 
-  const { data, error } =
+  const { error } =
     await supabaseClient.auth.signInWithPassword({
       email: email,
       password: password
@@ -441,14 +537,157 @@ function generateFanCode() {
 
     code += characters[
       Math.floor(
-        Math.random() *
-        characters.length
+        Math.random() * characters.length
       )
     ];
 
   }
 
   return code;
+
+}
+
+
+/* SAVE ACTIVITY */
+
+async function saveActivity() {
+
+  const message =
+    document.getElementById("activityMessage");
+
+  const platform =
+    document.getElementById("activityPlatform").value;
+
+  const itemName =
+    document.getElementById("activityItem").value.trim();
+
+  const amount =
+    parseInt(
+      document.getElementById("activityAmount").value
+    );
+
+
+  if (!platform) {
+
+    message.textContent =
+      "Please select a platform.";
+
+    return;
+  }
+
+
+  if (!itemName) {
+
+    message.textContent =
+      "Please enter the song, video or activity.";
+
+    return;
+  }
+
+
+  if (!amount || amount < 1) {
+
+    message.textContent =
+      "Please enter a valid number.";
+
+    return;
+  }
+
+
+  const {
+    data: { user }
+  } = await supabaseClient.auth.getUser();
+
+
+  if (!user) {
+
+    message.textContent =
+      "Please sign in first.";
+
+    return;
+  }
+
+
+  /* Find active campaign */
+
+  const { data: campaign, error: campaignError } =
+    await supabaseClient
+      .from("weekly_campaigns")
+      .select("id")
+      .eq("is_active", true)
+      .maybeSingle();
+
+
+  if (campaignError) {
+
+    message.textContent =
+      "Unable to load the weekly campaign.";
+
+    return;
+  }
+
+
+  if (!campaign) {
+
+    message.textContent =
+      "There is no active weekly campaign yet.";
+
+    return;
+  }
+
+
+  const activityType =
+    platform === "Voting"
+      ? "vote"
+      : "stream";
+
+
+  const { error } =
+    await supabaseClient
+      .from("activities")
+      .insert({
+
+        fan_id: user.id,
+
+        campaign_id: campaign.id,
+
+        platform: platform,
+
+        item_name: itemName,
+
+        activity_type: activityType,
+
+        amount: amount,
+
+        activity_date:
+          new Date()
+            .toISOString()
+            .split("T")[0]
+
+      });
+
+
+  if (error) {
+
+    message.textContent =
+      "Could not save activity: " +
+      error.message;
+
+    return;
+  }
+
+
+  message.textContent =
+    "Activity recorded successfully! 🎉";
+
+
+  document
+    .getElementById("activityItem")
+    .value = "";
+
+  document
+    .getElementById("activityAmount")
+    .value = "";
 
 }
 
