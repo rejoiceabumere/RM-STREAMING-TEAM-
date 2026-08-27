@@ -92,36 +92,17 @@
       margin-top: 5px;
     }
 
-    .goals,
-    .summary-grid {
+    .goals {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 15px;
       margin-top: 15px;
     }
 
-    .goal,
-    .summary-box {
+    .goal {
       background: #fafafa;
       padding: 18px;
       border-radius: 14px;
-    }
-
-    .summary-box {
-      text-align: center;
-    }
-
-    .summary-number {
-      display: block;
-      font-size: 28px;
-      font-weight: bold;
-      margin-top: 8px;
-    }
-
-    .summary-label {
-      color: #777;
-      font-size: 13px;
-      margin-top: 5px;
     }
 
     .progress-bar {
@@ -136,7 +117,7 @@
       height: 100%;
       width: 0%;
       background: #222;
-      transition: width 0.3s ease;
+      transition: width .3s ease;
     }
 
     .message {
@@ -150,32 +131,18 @@
       border-top: 1px solid #eee;
     }
 
-    .activity-list {
-      margin-top: 18px;
-    }
-
     .activity-item {
       background: #fafafa;
+      border: 1px solid #eee;
       border-radius: 12px;
       padding: 15px;
-      margin-bottom: 10px;
-      border: 1px solid #eee;
-    }
-
-    .activity-item strong {
-      display: block;
-      margin-bottom: 5px;
+      margin-top: 10px;
     }
 
     .activity-meta {
       color: #777;
       font-size: 13px;
-      margin-top: 5px;
-    }
-
-    .empty-history {
-      color: #777;
-      margin-top: 15px;
+      margin-top: 6px;
     }
 
     footer {
@@ -195,7 +162,7 @@
 
 <main>
 
-  <!-- LOGIN -->
+  <!-- AUTH -->
 
   <section id="authSection" class="card">
 
@@ -240,8 +207,6 @@
 
   <section id="dashboard" class="hidden">
 
-    <!-- PROFILE -->
-
     <div class="card">
 
       <h2>Welcome! 💜</h2>
@@ -265,93 +230,7 @@
     </div>
 
 
-    <!-- ACTIVITY SUMMARY -->
-
-    <div class="card">
-
-      <h2>📈 My Activity Summary</h2>
-
-      <p style="margin-top:8px;color:#666;">
-        Your total recorded activity for the current campaign.
-      </p>
-
-      <div class="summary-grid">
-
-        <div class="summary-box">
-          <span>🎧 Spotify</span>
-          <strong
-            class="summary-number"
-            id="summarySpotify"
-          >
-            0
-          </strong>
-          <div class="summary-label">
-            Streams
-          </div>
-        </div>
-
-
-        <div class="summary-box">
-          <span>▶️ YouTube</span>
-          <strong
-            class="summary-number"
-            id="summaryYoutube"
-          >
-            0
-          </strong>
-          <div class="summary-label">
-            Streams
-          </div>
-        </div>
-
-
-        <div class="summary-box">
-          <span>🎵 YouTube Music</span>
-          <strong
-            class="summary-number"
-            id="summaryYtMusic"
-          >
-            0
-          </strong>
-          <div class="summary-label">
-            Streams
-          </div>
-        </div>
-
-
-        <div class="summary-box">
-          <span>🗳️ Voting</span>
-          <strong
-            class="summary-number"
-            id="summaryVoting"
-          >
-            0
-          </strong>
-          <div class="summary-label">
-            Votes
-          </div>
-        </div>
-
-
-        <div class="summary-box">
-          <span>📊 Total</span>
-          <strong
-            class="summary-number"
-            id="summaryTotal"
-          >
-            0
-          </strong>
-          <div class="summary-label">
-            All activities
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <!-- WEEKLY GOALS -->
+    <!-- GOALS -->
 
     <div class="card">
 
@@ -369,7 +248,7 @@
             ></div>
           </div>
 
-          <span id="spotifyCount">0 / 0</span>
+          <span id="spotifyCount">0</span>
         </div>
 
 
@@ -383,7 +262,7 @@
             ></div>
           </div>
 
-          <span id="youtubeCount">0 / 0</span>
+          <span id="youtubeCount">0</span>
         </div>
 
 
@@ -397,7 +276,7 @@
             ></div>
           </div>
 
-          <span id="ytMusicCount">0 / 0</span>
+          <span id="ytMusicCount">0</span>
         </div>
 
 
@@ -411,7 +290,7 @@
             ></div>
           </div>
 
-          <span id="voteCount">0 / 0</span>
+          <span id="voteCount">0</span>
         </div>
 
       </div>
@@ -419,14 +298,14 @@
     </div>
 
 
-    <!-- ACTIVITY LOGGER -->
+    <!-- ACTIVITY -->
 
     <div class="card">
 
       <h2>📊 Log Your Activity</h2>
 
       <p style="margin-top:8px;color:#666;">
-        Record your individual streaming or voting activity.
+        Record your streaming or voting activity.
       </p>
 
       <div class="activity-form">
@@ -502,23 +381,14 @@
     </div>
 
 
-    <!-- ACTIVITY HISTORY -->
+    <!-- HISTORY -->
 
     <div class="card">
 
       <h2>📜 My Activity History</h2>
 
-      <p style="margin-top:8px;color:#666;">
-        Your recently recorded streaming and voting activities.
-      </p>
-
-      <div
-        id="activityHistory"
-        class="activity-list"
-      >
-        <p class="empty-history">
-          Loading activity history...
-        </p>
+      <div id="activityHistory">
+        Loading...
       </div>
 
     </div>
@@ -533,15 +403,14 @@
 </footer>
 
 
-<!-- SUPABASE -->
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase.js"></script>
 
-
 <script>
 
-/* SIGN UP */
+/* =========================
+   SIGN UP
+========================= */
 
 async function signUp() {
 
@@ -592,12 +461,14 @@ async function signUp() {
 
 
   message.textContent =
-    "Account created! Check your email if confirmation is required.";
+    "Account created! Check your email to verify your account.";
 
 }
 
 
-/* SIGN IN */
+/* =========================
+   SIGN IN
+========================= */
 
 async function signIn() {
 
@@ -642,17 +513,17 @@ async function signIn() {
 }
 
 
-/* SIGN OUT */
+/* =========================
+   SIGN OUT
+========================= */
 
 async function signOut() {
 
   await supabaseClient.auth.signOut();
 
-
   document
     .getElementById("dashboard")
     .classList.add("hidden");
-
 
   document
     .getElementById("authSection")
@@ -661,418 +532,14 @@ async function signOut() {
 }
 
 
-/* LOAD DASHBOARD */
-
-async function loadDashboard() {
-
-  const {
-    data: { user }
-  } =
-    await supabaseClient.auth.getUser();
-
-
-  if (!user) return;
-
-
-  document
-    .getElementById("authSection")
-    .classList.add("hidden");
-
-
-  document
-    .getElementById("dashboard")
-    .classList.remove("hidden");
-
-
-  /* LOAD FAN PROFILE */
-
-  let { data: profile } =
-    await supabaseClient
-      .from("fan_profiles")
-      .select("*")
-      .eq("id", user.id)
-      .maybeSingle();
-
-
-  if (!profile) {
-
-    const fanCode =
-      generateFanCode();
-
-
-    const {
-      data: newProfile,
-      error
-    } =
-      await supabaseClient
-        .from("fan_profiles")
-        .insert({
-
-          id: user.id,
-
-          fan_code: fanCode
-
-        })
-        .select()
-        .single();
-
-
-    if (!error) {
-
-      profile = newProfile;
-
-    }
-
-  }
-
-
-  if (profile) {
-
-    document
-      .getElementById("fanId")
-      .textContent =
-      profile.fan_code;
-
-  }
-
-
-  /* LOAD ACTIVE CAMPAIGN */
-
-  const {
-    data: campaign,
-    error: campaignError
-  } =
-    await supabaseClient
-      .from("weekly_campaigns")
-      .select("id")
-      .eq("is_active", true)
-      .maybeSingle();
-
-
-  if (campaignError || !campaign) {
-
-    document
-      .getElementById("activityHistory")
-      .innerHTML =
-      "<p class='empty-history'>No active campaign found.</p>";
-
-    return;
-
-  }
-
-
-  /* LOAD WEEKLY GOALS */
-
-  const {
-    data: goals,
-    error: goalsError
-  } =
-    await supabaseClient
-      .from("weekly_goals")
-      .select("platform, target")
-      .eq("campaign_id", campaign.id);
-
-
-  if (goalsError || !goals) {
-
-    return;
-
-  }
-
-
-  /* LOAD FAN ACTIVITIES */
-
-  const {
-    data: activities,
-    error: activityError
-  } =
-    await supabaseClient
-      .from("activities")
-      .select(
-        "platform, item_name, activity_type, amount, activity_date"
-      )
-      .eq("fan_id", user.id)
-      .eq("campaign_id", campaign.id)
-      .order("activity_date", {
-        ascending: false
-      });
-
-
-  if (activityError) {
-
-    console.error(activityError);
-
-    document
-      .getElementById("activityHistory")
-      .innerHTML =
-      "<p class='empty-history'>Unable to load activity history.</p>";
-
-    return;
-
-  }
-
-
-  /* CALCULATE TOTALS */
-
-  let spotifyTotal = 0;
-  let youtubeTotal = 0;
-  let ytMusicTotal = 0;
-  let votingTotal = 0;
-
-
-  activities.forEach(activity => {
-
-    const amount =
-      Number(activity.amount) || 0;
-
-
-    if (activity.platform === "Spotify") {
-
-      spotifyTotal += amount;
-
-    }
-
-
-    if (activity.platform === "YouTube") {
-
-      youtubeTotal += amount;
-
-    }
-
-
-    if (activity.platform === "YouTube Music") {
-
-      ytMusicTotal += amount;
-
-    }
-
-
-    if (activity.platform === "Voting") {
-
-      votingTotal += amount;
-
-    }
-
-  });
-
-
-  /* UPDATE ACTIVITY SUMMARY */
-
-  document
-    .getElementById("summarySpotify")
-    .textContent =
-    spotifyTotal;
-
-
-  document
-    .getElementById("summaryYoutube")
-    .textContent =
-    youtubeTotal;
-
-
-  document
-    .getElementById("summaryYtMusic")
-    .textContent =
-    ytMusicTotal;
-
-
-  document
-    .getElementById("summaryVoting")
-    .textContent =
-    votingTotal;
-
-
-  document
-    .getElementById("summaryTotal")
-    .textContent =
-    spotifyTotal +
-    youtubeTotal +
-    ytMusicTotal +
-    votingTotal;
-
-
-  /* DISPLAY GOALS */
-
-  goals.forEach(goal => {
-
-    const target =
-      Number(goal.target) || 0;
-
-
-    let current = 0;
-    let countId = null;
-    let progressId = null;
-
-
-    if (goal.platform === "Spotify") {
-
-      current = spotifyTotal;
-
-      countId = "spotifyCount";
-
-      progressId = "spotifyProgress";
-
-    }
-
-
-    if (goal.platform === "YouTube") {
-
-      current = youtubeTotal;
-
-      countId = "youtubeCount";
-
-      progressId = "youtubeProgress";
-
-    }
-
-
-    if (goal.platform === "YouTube Music") {
-
-      current = ytMusicTotal;
-
-      countId = "ytMusicCount";
-
-      progressId = "ytMusicProgress";
-
-    }
-
-
-    if (goal.platform === "Voting") {
-
-      current = votingTotal;
-
-      countId = "voteCount";
-
-      progressId = "voteProgress";
-
-    }
-
-
-    if (!countId) return;
-
-
-    document
-      .getElementById(countId)
-      .textContent =
-      current +
-      " / " +
-      target;
-
-
-    const percentage =
-      target > 0
-        ? Math.min(
-            (current / target) * 100,
-            100
-          )
-        : 0;
-
-
-    document
-      .getElementById(progressId)
-      .style.width =
-      percentage +
-      "%";
-
-  });
-
-
-  /* DISPLAY ACTIVITY HISTORY */
-
-  displayActivityHistory(activities);
-
-}
-
-
-/* DISPLAY ACTIVITY HISTORY */
-
-function displayActivityHistory(activities) {
-
-  const history =
-    document.getElementById(
-      "activityHistory"
-    );
-
-
-  if (!activities || activities.length === 0) {
-
-    history.innerHTML =
-      "<p class='empty-history'>You haven't recorded any activities yet.</p>";
-
-    return;
-
-  }
-
-
-  history.innerHTML = "";
-
-
-  activities.forEach(activity => {
-
-    const item =
-      document.createElement("div");
-
-
-    item.className =
-      "activity-item";
-
-
-    const title =
-      document.createElement("strong");
-
-
-    title.textContent =
-      activity.platform +
-      " — " +
-      activity.item_name;
-
-
-    const amount =
-      document.createElement("div");
-
-
-    amount.textContent =
-      "Amount: " +
-      activity.amount;
-
-
-    const meta =
-      document.createElement("div");
-
-
-    meta.className =
-      "activity-meta";
-
-
-    meta.textContent =
-      (activity.activity_type === "vote"
-        ? "Voting"
-        : "Streaming") +
-      " • " +
-      activity.activity_date;
-
-
-    item.appendChild(title);
-
-    item.appendChild(amount);
-
-    item.appendChild(meta);
-
-
-    history.appendChild(item);
-
-  });
-
-}
-
-
-/* GENERATE FAN ID */
+/* =========================
+   FAN CODE
+========================= */
 
 function generateFanCode() {
 
   const characters =
     "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-
 
   let code = "RM-";
 
@@ -1094,7 +561,288 @@ function generateFanCode() {
 }
 
 
-/* SAVE ACTIVITY */
+/* =========================
+   LOAD DASHBOARD
+========================= */
+
+async function loadDashboard() {
+
+  const {
+    data: { user }
+  } =
+    await supabaseClient.auth.getUser();
+
+
+  if (!user) return;
+
+
+  document
+    .getElementById("authSection")
+    .classList.add("hidden");
+
+  document
+    .getElementById("dashboard")
+    .classList.remove("hidden");
+
+
+  let { data: profile } =
+    await supabaseClient
+      .from("fan_profiles")
+      .select("id, fan_code, is_admin")
+      .eq("id", user.id)
+      .maybeSingle();
+
+
+  if (!profile) {
+
+    const fanCode =
+      generateFanCode();
+
+
+    const {
+      data: newProfile,
+      error
+    } =
+      await supabaseClient
+        .from("fan_profiles")
+        .insert({
+
+          id: user.id,
+
+          fan_code: fanCode,
+
+          is_admin: false
+
+        })
+        .select()
+        .single();
+
+
+    if (error) {
+
+      document
+        .getElementById("fanId")
+        .textContent =
+        "Unable to create Fan ID";
+
+      console.error(error);
+
+      return;
+
+    }
+
+
+    profile = newProfile;
+
+  }
+
+
+  document
+    .getElementById("fanId")
+    .textContent =
+    profile.fan_code;
+
+
+  await loadGoals();
+
+  await loadActivityHistory();
+
+}
+
+
+/* =========================
+   LOAD GOALS
+========================= */
+
+async function loadGoals() {
+
+  const {
+    data: campaign
+  } =
+    await supabaseClient
+      .from("weekly_campaigns")
+      .select("id")
+      .eq("is_active", true)
+      .maybeSingle();
+
+
+  if (!campaign) return;
+
+
+  const {
+    data: goals
+  } =
+    await supabaseClient
+      .from("weekly_goals")
+      .select("platform, target")
+      .eq("campaign_id", campaign.id);
+
+
+  if (!goals) return;
+
+
+  const {
+    data: { user }
+  } =
+    await supabaseClient.auth.getUser();
+
+
+  if (!user) return;
+
+
+  const {
+    data: activities
+  } =
+    await supabaseClient
+      .from("activities")
+      .select("platform, activity_type, amount")
+      .eq("fan_id", user.id)
+      .eq("campaign_id", campaign.id);
+
+
+  const totals = {
+
+    Spotify: 0,
+
+    YouTube: 0,
+
+    "YouTube Music": 0,
+
+    Voting: 0
+
+  };
+
+
+  if (activities) {
+
+    activities.forEach(activity => {
+
+      if (
+        totals.hasOwnProperty(
+          activity.platform
+        )
+      ) {
+
+        totals[activity.platform] +=
+          Number(activity.amount) || 0;
+
+      }
+
+    });
+
+  }
+
+
+  goals.forEach(goal => {
+
+    const current =
+      totals[goal.platform] || 0;
+
+    const target =
+      Number(goal.target) || 0;
+
+
+    let percentage = 0;
+
+
+    if (target > 0) {
+
+      percentage =
+        Math.min(
+          100,
+          (current / target) * 100
+        );
+
+    }
+
+
+    if (goal.platform === "Spotify") {
+
+      updateGoal(
+        "spotifyProgress",
+        "spotifyCount",
+        current,
+        target,
+        percentage
+      );
+
+    }
+
+
+    if (goal.platform === "YouTube") {
+
+      updateGoal(
+        "youtubeProgress",
+        "youtubeCount",
+        current,
+        target,
+        percentage
+      );
+
+    }
+
+
+    if (goal.platform === "YouTube Music") {
+
+      updateGoal(
+        "ytMusicProgress",
+        "ytMusicCount",
+        current,
+        target,
+        percentage
+      );
+
+    }
+
+
+    if (goal.platform === "Voting") {
+
+      updateGoal(
+        "voteProgress",
+        "voteCount",
+        current,
+        target,
+        percentage
+      );
+
+    }
+
+  });
+
+}
+
+
+/* =========================
+   UPDATE GOAL
+========================= */
+
+function updateGoal(
+  progressId,
+  countId,
+  current,
+  target,
+  percentage
+) {
+
+  document
+    .getElementById(progressId)
+    .style.width =
+    percentage + "%";
+
+
+  document
+    .getElementById(countId)
+    .textContent =
+    target > 0
+      ? current + " / " + target
+      : current;
+
+}
+
+
+/* =========================
+   SAVE ACTIVITY
+========================= */
 
 async function saveActivity() {
 
@@ -1170,8 +918,6 @@ async function saveActivity() {
   }
 
 
-  /* FIND ACTIVE CAMPAIGN */
-
   const {
     data: campaign,
     error: campaignError
@@ -1183,27 +929,15 @@ async function saveActivity() {
       .maybeSingle();
 
 
-  if (campaignError) {
+  if (campaignError || !campaign) {
 
     message.textContent =
-      "Unable to load the weekly campaign.";
+      "No active weekly campaign is available.";
 
     return;
 
   }
 
-
-  if (!campaign) {
-
-    message.textContent =
-      "There is no active weekly campaign yet.";
-
-    return;
-
-  }
-
-
-  /* DETERMINE ACTIVITY TYPE */
 
   const activityType =
     platform === "Voting"
@@ -1211,9 +945,9 @@ async function saveActivity() {
       : "stream";
 
 
-  /* SAVE ACTIVITY */
-
-  const { error } =
+  const {
+    error
+  } =
     await supabaseClient
       .from("activities")
       .insert({
@@ -1263,14 +997,130 @@ async function saveActivity() {
     .value = "";
 
 
-  /* REFRESH EVERYTHING */
+  await loadGoals();
 
-  await loadDashboard();
+  await loadActivityHistory();
 
 }
 
 
-/* CHECK SESSION */
+/* =========================
+   ACTIVITY HISTORY
+========================= */
+
+async function loadActivityHistory() {
+
+  const container =
+    document
+      .getElementById("activityHistory");
+
+
+  const {
+    data: { user }
+  } =
+    await supabaseClient.auth.getUser();
+
+
+  if (!user) return;
+
+
+  const {
+    data: activities,
+    error
+  } =
+    await supabaseClient
+      .from("activities")
+      .select(
+        "platform, item_name, activity_type, amount, activity_date"
+      )
+      .eq("fan_id", user.id)
+      .order("activity_date", {
+        ascending: false
+      })
+      .limit(50);
+
+
+  if (error) {
+
+    container.textContent =
+      "Unable to load activity history.";
+
+    return;
+
+  }
+
+
+  if (!activities || activities.length === 0) {
+
+    container.textContent =
+      "No activity recorded yet.";
+
+    return;
+
+  }
+
+
+  container.innerHTML = "";
+
+
+  activities.forEach(activity => {
+
+    const item =
+      document.createElement("div");
+
+
+    item.className =
+      "activity-item";
+
+
+    const title =
+      document.createElement("strong");
+
+
+    title.textContent =
+      activity.platform +
+      " — " +
+      activity.item_name;
+
+
+    const amount =
+      document.createElement("div");
+
+
+    amount.textContent =
+      "Amount: " +
+      activity.amount;
+
+
+    const meta =
+      document.createElement("div");
+
+
+    meta.className =
+      "activity-meta";
+
+
+    meta.textContent =
+      activity.activity_date;
+
+
+    item.appendChild(title);
+
+    item.appendChild(amount);
+
+    item.appendChild(meta);
+
+
+    container.appendChild(item);
+
+  });
+
+}
+
+
+/* =========================
+   SESSION
+========================= */
 
 async function checkSession() {
 
