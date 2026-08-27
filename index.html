@@ -37,88 +37,21 @@
       padding: 25px 16px;
     }
 
-    .hero {
+    .card {
       background: white;
       border-radius: 18px;
-      padding: 30px 22px;
-      margin-bottom: 22px;
+      padding: 25px;
+      margin-bottom: 20px;
       box-shadow: 0 4px 20px rgba(0,0,0,.06);
     }
 
-    .hero h2 {
-      font-size: 30px;
-      margin-bottom: 10px;
-    }
-
-    .hero p {
-      color: #666;
-      line-height: 1.6;
-    }
-
-    .fan-id {
-      margin-top: 20px;
-      padding: 15px;
-      background: #f0f0f0;
-      border-radius: 12px;
-    }
-
-    .fan-id strong {
-      display: block;
-      margin-top: 5px;
-      font-size: 20px;
-    }
-
-    section {
-      margin-bottom: 28px;
-    }
-
-    section h2 {
-      margin-bottom: 15px;
-    }
-
-    .goals {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 15px;
-    }
-
-    .goal {
-      background: white;
-      padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0 3px 15px rgba(0,0,0,.05);
-    }
-
-    .goal h3 {
-      margin-bottom: 10px;
-    }
-
-    .progress-bar {
-      height: 10px;
-      background: #ddd;
-      border-radius: 20px;
-      overflow: hidden;
-      margin: 12px 0;
-    }
-
-    .progress {
-      width: 0%;
-      height: 100%;
-      background: #222;
-    }
-
-    .empty {
-      background: white;
-      padding: 22px;
-      border-radius: 15px;
-      color: #777;
-      text-align: center;
-    }
-
-    .buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
+    input {
+      width: 100%;
+      padding: 13px;
+      margin: 8px 0;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 15px;
     }
 
     button {
@@ -127,6 +60,7 @@
       border-radius: 10px;
       font-weight: bold;
       cursor: pointer;
+      margin-top: 8px;
     }
 
     .primary {
@@ -139,9 +73,58 @@
       color: #111;
     }
 
+    .hidden {
+      display: none;
+    }
+
+    .fan-id {
+      background: #f0f0f0;
+      padding: 15px;
+      border-radius: 12px;
+      margin-top: 15px;
+    }
+
+    .fan-id strong {
+      display: block;
+      font-size: 21px;
+      margin-top: 5px;
+    }
+
+    .goals {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .goal {
+      background: #fafafa;
+      padding: 18px;
+      border-radius: 14px;
+    }
+
+    .progress-bar {
+      height: 9px;
+      background: #ddd;
+      border-radius: 20px;
+      overflow: hidden;
+      margin: 12px 0;
+    }
+
+    .progress {
+      height: 100%;
+      width: 0%;
+      background: #222;
+    }
+
+    .message {
+      margin-top: 12px;
+      color: #666;
+    }
+
     footer {
       text-align: center;
-      padding: 35px 15px;
+      padding: 35px;
       color: #777;
       font-size: 13px;
     }
@@ -156,122 +139,139 @@
 
 <main>
 
-  <div class="hero">
-    <h2>Welcome to RM Streaming Hub</h2>
+  <!-- LOGIN -->
 
-    <p>
-      A simple place for RM fans to organize weekly
-      streaming, voting and support activities.
+  <section id="authSection" class="card">
+
+    <h2>Join the Hub</h2>
+
+    <p style="margin-top:8px;color:#666;">
+      Create an account to track your weekly support activities.
     </p>
 
-    <div class="fan-id">
-      Your Anonymous Fan ID
-      <strong id="fanId">Creating...</strong>
-    </div>
-  </div>
+    <input
+      type="email"
+      id="email"
+      placeholder="Email address"
+    >
 
+    <input
+      type="password"
+      id="password"
+      placeholder="Password"
+    >
 
-  <section>
-    <h2>🎯 This Week's Goals</h2>
+    <button
+      class="primary"
+      onclick="signUp()"
+    >
+      Create Account
+    </button>
 
-    <div class="goals">
+    <button
+      class="secondary"
+      onclick="signIn()"
+    >
+      Sign In
+    </button>
 
-      <div class="goal">
-        <h3>🎧 Spotify</h3>
+    <div id="authMessage" class="message"></div>
 
-        <div class="progress-bar">
-          <div class="progress" id="spotifyProgress"></div>
-        </div>
-
-        <span id="spotifyCount">0</span> / 105
-      </div>
-
-
-      <div class="goal">
-        <h3>▶️ YouTube</h3>
-
-        <div class="progress-bar">
-          <div class="progress" id="youtubeProgress"></div>
-        </div>
-
-        <span id="youtubeCount">0</span> / 15
-      </div>
-
-
-      <div class="goal">
-        <h3>🎵 YouTube Music</h3>
-
-        <div class="progress-bar">
-          <div class="progress" id="ytMusicProgress"></div>
-        </div>
-
-        <span id="ytMusicCount">0</span> / 105
-      </div>
-
-
-      <div class="goal">
-        <h3>🗳️ Voting</h3>
-
-        <div class="progress-bar">
-          <div class="progress" id="voteProgress"></div>
-        </div>
-
-        <span id="voteCount">0</span> / 50
-      </div>
-
-    </div>
   </section>
 
 
-  <section>
-    <h2>🎵 Focus Songs</h2>
+  <!-- DASHBOARD -->
 
-    <div class="empty">
-      Weekly focus songs will appear here.
-    </div>
-  </section>
+  <section id="dashboard" class="hidden">
 
+    <div class="card">
 
-  <section>
-    <h2>🎧 Focus Playlists</h2>
+      <h2>Welcome! 💜</h2>
 
-    <div class="empty">
-      Weekly focus playlists will appear here.
-    </div>
-  </section>
+      <p style="margin-top:8px;color:#666;">
+        Your personal activity dashboard.
+      </p>
 
+      <div class="fan-id">
+        Anonymous Fan ID
+        <strong id="fanId">Loading...</strong>
+      </div>
 
-  <section>
-    <h2>📊 Your Activity</h2>
-
-    <div class="buttons">
-
-      <button class="primary" onclick="logActivity()">
-        + Log Activity
-      </button>
-
-      <button class="secondary" onclick="viewReport()">
-        Weekly Report
+      <button
+        class="secondary"
+        onclick="signOut()"
+      >
+        Sign Out
       </button>
 
     </div>
-  </section>
 
 
-  <section>
-    <h2>📸 Weekly Proof</h2>
+    <div class="card">
 
-    <div class="empty">
+      <h2>🎯 This Week's Goals</h2>
 
-      Proof submission opens according to the weekly schedule.
+      <div class="goals">
 
-      <br><br>
+        <div class="goal">
+          <h3>🎧 Spotify</h3>
 
-      <button class="primary" onclick="submitProof()">
-        Submit Proof
-      </button>
+          <div class="progress-bar">
+            <div
+              class="progress"
+              id="spotifyProgress"
+            ></div>
+          </div>
+
+          <span id="spotifyCount">0</span>
+        </div>
+
+
+        <div class="goal">
+          <h3>▶️ YouTube</h3>
+
+          <div class="progress-bar">
+            <div
+              class="progress"
+              id="youtubeProgress"
+            ></div>
+          </div>
+
+          <span id="youtubeCount">0</span>
+        </div>
+
+
+        <div class="goal">
+          <h3>🎵 YouTube Music</h3>
+
+          <div class="progress-bar">
+            <div
+              class="progress"
+              id="ytMusicProgress"
+            ></div>
+          </div>
+
+          <span id="ytMusicCount">0</span>
+        </div>
+
+
+        <div class="goal">
+          <h3>🗳️ Voting</h3>
+
+          <div class="progress-bar">
+            <div
+              class="progress"
+              id="voteProgress"
+            ></div>
+          </div>
+
+          <span id="voteCount">0</span>
+        </div>
+
+      </div>
 
     </div>
+
   </section>
 
 </main>
@@ -282,83 +282,196 @@
 </footer>
 
 
-<script>
-
-  function generateFanId() {
-
-    const characters =
-      "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-
-    let id = "RM-";
-
-    for (let i = 0; i < 5; i++) {
-
-      id += characters[
-        Math.floor(
-          Math.random() * characters.length
-        )
-      ];
-
-    }
-
-    return id;
-  }
-
-
-  function getFanId() {
-
-    let id =
-      localStorage.getItem("rmFanId");
-
-    if (!id) {
-
-      id = generateFanId();
-
-      localStorage.setItem(
-        "rmFanId",
-        id
-      );
-
-    }
-
-    return id;
-  }
-
-
-  document.getElementById("fanId")
-    .textContent = getFanId();
-
-
-  function logActivity() {
-
-    alert(
-      "Activity logging will be connected next."
-    );
-
-  }
-
-
-  function viewReport() {
-
-    alert(
-      "Your weekly report will appear here."
-    );
-
-  }
-
-
-  function submitProof() {
-
-    alert(
-      "Weekly proof submission will be connected next."
-    );
-
-  }
-
-</script>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase.js"></script>
+
+<script>
+
+async function signUp() {
+
+  const email =
+    document.getElementById("email").value;
+
+  const password =
+    document.getElementById("password").value;
+
+  const message =
+    document.getElementById("authMessage");
+
+  if (!email || !password) {
+
+    message.textContent =
+      "Please enter your email and password.";
+
+    return;
+  }
+
+  const { data, error } =
+    await supabaseClient.auth.signUp({
+      email: email,
+      password: password
+    });
+
+  if (error) {
+
+    message.textContent =
+      error.message;
+
+    return;
+  }
+
+  message.textContent =
+    "Account created! Check your email if confirmation is required.";
+
+}
+
+
+async function signIn() {
+
+  const email =
+    document.getElementById("email").value;
+
+  const password =
+    document.getElementById("password").value;
+
+  const message =
+    document.getElementById("authMessage");
+
+  const { data, error } =
+    await supabaseClient.auth.signInWithPassword({
+      email: email,
+      password: password
+    });
+
+  if (error) {
+
+    message.textContent =
+      error.message;
+
+    return;
+  }
+
+  await loadDashboard();
+
+}
+
+
+async function signOut() {
+
+  await supabaseClient.auth.signOut();
+
+  document
+    .getElementById("dashboard")
+    .classList.add("hidden");
+
+  document
+    .getElementById("authSection")
+    .classList.remove("hidden");
+
+}
+
+
+async function loadDashboard() {
+
+  const {
+    data: { user }
+  } = await supabaseClient.auth.getUser();
+
+  if (!user) return;
+
+  document
+    .getElementById("authSection")
+    .classList.add("hidden");
+
+  document
+    .getElementById("dashboard")
+    .classList.remove("hidden");
+
+
+  let { data: profile } =
+    await supabaseClient
+      .from("fan_profiles")
+      .select("*")
+      .eq("id", user.id)
+      .maybeSingle();
+
+
+  if (!profile) {
+
+    const fanCode =
+      generateFanCode();
+
+    const { data: newProfile, error } =
+      await supabaseClient
+        .from("fan_profiles")
+        .insert({
+          id: user.id,
+          fan_code: fanCode
+        })
+        .select()
+        .single();
+
+    if (!error) {
+      profile = newProfile;
+    }
+
+  }
+
+
+  if (profile) {
+
+    document
+      .getElementById("fanId")
+      .textContent =
+      profile.fan_code;
+
+  }
+
+}
+
+
+function generateFanCode() {
+
+  const characters =
+    "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+
+  let code = "RM-";
+
+  for (let i = 0; i < 5; i++) {
+
+    code += characters[
+      Math.floor(
+        Math.random() *
+        characters.length
+      )
+    ];
+
+  }
+
+  return code;
+
+}
+
+
+async function checkSession() {
+
+  const {
+    data: { session }
+  } =
+    await supabaseClient.auth.getSession();
+
+  if (session) {
+
+    await loadDashboard();
+
+  }
+
+}
+
+
+checkSession();
+
+</script>
 
 </body>
 </html>
