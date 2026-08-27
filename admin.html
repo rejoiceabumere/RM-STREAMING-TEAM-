@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>RM Streaming Hub - Admin</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f7f8;
+      color: #222;
+    }
+
+    header {
+      background: #111;
+      color: white;
+      padding: 18px;
+    }
+
+    header h1 {
+      max-width: 1000px;
+      margin: auto;
+      font-size: 21px;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: auto;
+      padding: 25px 16px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 18px;
+      padding: 25px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.06);
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 13px;
+      margin: 8px 0;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 15px;
+      background: white;
+    }
+
+    button {
+      padding: 13px 18px;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    .primary {
+      background: #111;
+      color: white;
+    }
+
+    .secondary {
+      background: #e5e5e5;
+      color: #111;
+    }
+
+    .danger {
+      background: #d32f2f;
+      color: white;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .message {
+      margin-top: 12px;
+      color: #666;
+    }
+
+    .admin-badge {
+      display: inline-block;
+      background: #111;
+      color: white;
+      padding: 7px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
+      margin-top: 18px;
+    }
+
+    .stat {
+      background: #fafafa;
+      padding: 20px;
+      border-radius: 14px;
+      text-align: center;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 28px;
+      margin-top: 8px;
+    }
+
+    .goal-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .activity-item {
+      background: #fafafa;
+      border: 1px solid #eee;
+      border-radius: 12px;
+      padding: 15px;
+      margin-top: 10px;
+    }
+
+    .activity-meta {
+      color: #777;
+      font-size: 13px;
+      margin-top: 5px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 35px;
+      color: #777;
+      font-size: 13px;
+    }
+
+    @media (max-width: 600px) {
+      .goal-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>RM STREAMING HUB — ADMIN</h1>
+</header>
+
+<main>
+
+  <!-- ADMIN LOGIN -->
+
+  <section id="loginSection" class="card">
+
+    <h2>Admin Access</h2>
+
+    <p style="margin-top:8px;color:#666;">
+      Sign in with your administrator account.
+    </p>
+
+    <input
+      type="email"
+      id="email"
+      placeholder="Admin email"
+    >
+
+    <input
+      type="password"
+      id="password"
+      placeholder="Password"
+    >
+
+    <button
+      class="primary"
+      onclick="adminSignIn()"
+    >
+      Sign In
+    </button>
+
+    <div
+      id="loginMessage"
+      class="message"
+    ></div>
+
+  </section>
+
+
+  <!-- ADMIN DASHBOARD -->
+
+  <section id="adminDashboard" class="hidden">
+
+    <div class="card">
+
+      <h2>Admin Dashboard 👑</h2>
+
+      <span class="admin-badge">
+        ADMINISTRATOR
+      </span>
+
+      <p style="margin-top:12px;color:#666;">
+        Manage your RM Streaming Hub campaigns and monitor fan activity.
+      </p>
+
+      <button
+        class="secondary"
+        onclick="adminSignOut()"
+      >
+        Sign Out
+      </button>
+
+    </div>
+
+
+    <!-- STATISTICS -->
+
+    <div class="card">
+
+      <h2>📊 Hub Statistics</h2>
+
+      <div class="stats">
+
+        <div class="stat">
+          <span>👥 Fans</span>
+          <strong id="fanCount">0</strong>
+        </div>
+
+        <div class="stat">
+          <span>📊 Activities</span>
+          <strong id="activityCount">0</strong>
+        </div>
+
+        <div class="stat">
+          <span>🎧 Streams</span>
+          <strong id="streamCount">0</strong>
+        </div>
+
+        <div class="stat">
+          <span>🗳️ Votes</span>
+          <strong id="voteCount">0</strong>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- CAMPAIGN -->
+
+    <div class="card">
+
+      <h2>📅 Weekly Campaign</h2>
+
+      <p style="margin-top:8px;color:#666;">
+        Create a new weekly campaign.
+      </p>
+
+      <input
+        type="text"
+        id="campaignName"
+        placeholder="Campaign name"
+      >
+
+      <button
+        class="primary"
+        onclick="createCampaign()"
+      >
+        Create Campaign
+      </button>
+
+      <div
+        id="campaignMessage"
+        class="message"
+      ></div>
+
+    </div>
+
+
+    <!-- GOALS -->
+
+    <div class="card">
+
+      <h2>🎯 Campaign Goals</h2>
+
+      <p style="margin-top:8px;color:#666;">
+        Set targets for the active campaign.
+      </p>
+
+      <div class="goal-row">
+
+        <div>
+          <label>Spotify Target</label>
+          <input
+            type="number"
+            id="spotifyTarget"
+            min="0"
+            placeholder="105"
+          >
+        </div>
+
+        <div>
+          <label>YouTube Target</label>
+          <input
+            type="number"
+            id="youtubeTarget"
+            min="0"
+            placeholder="50"
+          >
+        </div>
+
+      </div>
+
+
+      <div class="goal-row">
+
+        <div>
+          <label>YouTube Music Target</label>
+          <input
+            type="number"
+            id="ytMusicTarget"
+            min="0"
+            placeholder="50"
+          >
+        </div>
+
+        <div>
+          <label>Voting Target</label>
+          <input
+            type="number"
+            id="votingTarget"
+            min="0"
+            placeholder="10"
+          >
+        </div>
+
+      </div>
+
+
+      <button
+        class="primary"
+        onclick="saveGoals()"
+      >
+        Save Goals
+      </button>
+
+      <div
+        id="goalMessage"
+        class="message"
+      ></div>
+
+    </div>
+
+
+    <!-- RECENT ACTIVITY -->
+
+    <div class="card">
+
+      <h2>📝 Recent Fan Activity</h2>
+
+      <div id="recentActivities">
+        Loading...
+      </div>
+
+    </div>
+
+  </section>
+
+</main>
+
+
+<footer>
+  RM Streaming Hub Admin
+</footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+
+
+<script>
+
+/* ADMIN SIGN IN */
+
+async function adminSignIn() {
+
+  const email =
+    document
+      .getElementById("email")
+      .value
+      .trim();
+
+  const password =
+    document
+      .getElementById("password")
+      .value;
+
+  const message =
+    document
+      .getElementById("loginMessage");
+
+
+  if (!email || !password) {
+
+    message.textContent =
+      "Please enter your email and password.";
+
+    return;
+
+  }
+
+
+  const { error } =
+    await supabaseClient.auth.signInWithPassword({
+
+      email: email,
+
+      password: password
+
+    });
+
+
+  if (error) {
+
+    message.textContent =
+      error.message;
+
+    return;
+
+  }
+
+
+  await checkAdmin();
+
+}
+
+
+/* CHECK ADMIN */
+
+async function checkAdmin() {
+
+  const {
+    data: { user }
+  } =
+    await supabaseClient.auth.getUser();
+
+
+  if (!user) {
+
+    return;
+
+  }
+
+
+  const {
+    data: profile,
+    error
+  } =
+    await supabaseClient
+      .from("fan_profiles")
+      .select("is_admin")
+      .eq("id", user.id)
+      .maybeSingle();
+
+
+  if (error || !profile || profile.is_admin !== true) {
+
+    document
+      .getElementById("loginMessage")
+      .textContent =
+      "You do not have administrator access.";
+
+    await supabaseClient.auth.signOut();
+
+    return;
+
+  }
+
+
+  document
+    .getElementById("loginSection")
+    .classList.add("hidden");
+
+
+  document
+    .getElementById("adminDashboard")
+    .classList.remove("hidden");
+
+
+  await loadAdminDashboard();
+
+}
+
+
+/* LOAD ADMIN DASHBOARD */
+
+async function loadAdminDashboard() {
+
+  await loadStatistics();
+
+  await loadActiveCampaign();
+
+  await loadRecentActivities();
+
+}
+
+
+/* LOAD STATISTICS */
+
+async function loadStatistics() {
+
+  const {
+    count: fanCount
+  } =
+    await supabaseClient
+      .from("fan_profiles")
+      .select("*", {
+        count: "exact",
+        head: true
+      });
+
+
+  const {
+    data: activities
+  } =
+    await supabaseClient
+      .from("activities")
+      .select("activity_type, amount");
+
+
+  let streams = 0;
+  let votes = 0;
+
+
+  if (activities) {
+
+    activities.forEach(activity => {
+
+      const amount =
+        Number(activity.amount) || 0;
+
+
+      if (activity.activity_type === "vote") {
+
+        votes += amount;
+
+      } else {
+
+        streams += amount;
+
+      }
+
+    });
+
+  }
+
+
+  document
+    .getElementById("fanCount")
+    .textContent =
+    fanCount || 0;
+
+
+  document
+    .getElementById("activityCount")
+    .textContent =
+    activities
+      ? activities.length
+      : 0;
+
+
+  document
+    .getElementById("streamCount")
+    .textContent =
+    streams;
+
+
+  document
+    .getElementById("voteCount")
+    .textContent =
+    votes;
+
+}
+
+
+/* LOAD ACTIVE CAMPAIGN */
+
+async function loadActiveCampaign() {
+
+  const {
+    data: campaign,
+    error
+  } =
+    await supabaseClient
+      .from("weekly_campaigns")
+      .select("*")
+      .eq("is_active", true)
+      .maybeSingle();
+
+
+  if (error || !campaign) {
+
+    return;
+
+  }
+
+
+  document
+    .getElementById("campaignName")
+    .value =
+    campaign.name || "";
+
+
+  const {
+    data: goals
+  } =
+    await supabaseClient
+      .from("weekly_goals")
+      .select("platform, target")
+      .eq("campaign_id", campaign.id);
+
+
+  if (!goals) return;
+
+
+  goals.forEach(goal => {
+
+    if (goal.platform === "Spotify") {
+
+      document
+        .getElementById("spotifyTarget")
+        .value =
+        goal.target;
+
+    }
+
+
+    if (goal.platform === "YouTube") {
+
+      document
+        .getElementById("youtubeTarget")
+        .value =
+        goal.target;
+
+    }
+
+
+    if (goal.platform === "YouTube Music") {
+
+      document
+        .getElementById("ytMusicTarget")
+        .value =
+        goal.target;
+
+    }
+
+
+    if (goal.platform === "Voting") {
+
+      document
+        .getElementById("votingTarget")
+        .value =
+        goal.target;
+
+    }
+
+  });
+
+}
+
+
+/* CREATE CAMPAIGN */
+
+async function createCampaign() {
+
+  const name =
+    document
+      .getElementById("campaignName")
+      .value
+      .trim();
+
+  const message =
+    document
+      .getElementById("campaignMessage");
+
+
+  if (!name) {
+
+    message.textContent =
+      "Please enter a campaign name.";
+
+    return;
+
+  }
+
+
+  const {
+    data: activeCampaign
+  } =
+    await supabaseClient
+      .from("weekly_campaigns")
+      .select("id")
+      .eq("is_active", true)
+      .maybeSingle();
+
+
+  if (activeCampaign) {
+
+    const confirmCreate =
+      confirm(
+        "There is already an active campaign. Create another one?"
+      );
+
+
+    if (!confirmCreate) {
+
+      return;
+
+    }
+
+
+    await supabaseClient
+      .from("weekly_campaigns")
+      .update({
+        is_active: false
+      })
+      .eq("id", activeCampaign.id);
+
+  }
+
+
+  const {
+    data: newCampaign,
+    error
+  } =
+    await supabaseClient
+      .from("weekly_campaigns")
+      .insert({
+
+        name: name,
+
+        is_active: true
+
+      })
+      .select()
+      .single();
+
+
+  if (error) {
+
+    message.textContent =
+      "Could not create campaign: " +
+      error.message;
+
+    return;
+
+  }
+
+
+  message.textContent =
+    "Campaign created successfully!";
+
+
+  await loadActiveCampaign();
+
+}
+
+
+/* SAVE GOALS */
+
+async function saveGoals() {
+
+  const message =
+    document
+      .getElementById("goalMessage");
+
+
+  const {
+    data: campaign
+  } =
+    await supabaseClient
+      .from("weekly_campaigns")
+      .select("id")
+      .eq("is_active", true)
+      .maybeSingle();
+
+
+  if (!campaign) {
+
+    message.textContent =
+      "No active campaign found.";
+
+    return;
+
+  }
+
+
+  const goals = [
+
+    {
+      platform: "Spotify",
+      target: Number(
+        document
+          .getElementById("spotifyTarget")
+          .value
+      ) || 0
+    },
+
+    {
+      platform: "YouTube",
+      target: Number(
+        document
+          .getElementById("youtubeTarget")
+          .value
+      ) || 0
+    },
+
+    {
+      platform: "YouTube Music",
+      target: Number(
+        document
+          .getElementById("ytMusicTarget")
+          .value
+      ) || 0
+    },
+
+    {
+      platform: "Voting",
+      target: Number(
+        document
+          .getElementById("votingTarget")
+          .value
+      ) || 0
+    }
+
+  ];
+
+
+  for (const goal of goals) {
+
+    const {
+      data: existing
+    } =
+      await supabaseClient
+        .from("weekly_goals")
+        .select("id")
+        .eq("campaign_id", campaign.id)
+        .eq("platform", goal.platform)
+        .maybeSingle();
+
+
+    if (existing) {
+
+      await supabaseClient
+        .from("weekly_goals")
+        .update({
+          target: goal.target
+        })
+        .eq("id", existing.id);
+
+    } else {
+
+      await supabaseClient
+        .from("weekly_goals")
+        .insert({
+
+          campaign_id: campaign.id,
+
+          platform: goal.platform,
+
+          target: goal.target
+
+        });
+
+    }
+
+  }
+
+
+  message.textContent =
+    "Goals saved successfully! 🎯";
+
+
+  await loadActiveCampaign();
+
+}
+
+
+/* LOAD RECENT ACTIVITIES */
+
+async function loadRecentActivities() {
+
+  const container =
+    document
+      .getElementById("recentActivities");
+
+
+  const {
+    data: activities,
+    error
+  } =
+    await supabaseClient
+      .from("activities")
+      .select(
+        "fan_id, platform, item_name, activity_type, amount, activity_date"
+      )
+      .order("activity_date", {
+        ascending: false
+      })
+      .limit(30);
+
+
+  if (error) {
+
+    container.textContent =
+      "Unable to load activities.";
+
+    return;
+
+  }
+
+
+  if (!activities || activities.length === 0) {
+
+    container.textContent =
+      "No activities recorded yet.";
+
+    return;
+
+  }
+
+
+  container.innerHTML = "";
+
+
+  activities.forEach(activity => {
+
+    const item =
+      document.createElement("div");
+
+
+    item.className =
+      "activity-item";
+
+
+    const title =
+      document.createElement("strong");
+
+
+    title.textContent =
+      activity.platform +
+      " — " +
+      activity.item_name;
+
+
+    const amount =
+      document.createElement("div");
+
+
+    amount.textContent =
+      "Amount: " +
+      activity.amount;
+
+
+    const meta =
+      document.createElement("div");
+
+
+    meta.className =
+      "activity-meta";
+
+
+    meta.textContent =
+      "Fan: " +
+      activity.fan_id +
+      " • " +
+      activity.activity_date;
+
+
+    item.appendChild(title);
+
+    item.appendChild(amount);
+
+    item.appendChild(meta);
+
+
+    container.appendChild(item);
+
+  });
+
+}
+
+
+/* ADMIN SIGN OUT */
+
+async function adminSignOut() {
+
+  await supabaseClient.auth.signOut();
+
+  location.reload();
+
+}
+
+
+/* CHECK EXISTING SESSION */
+
+async function checkExistingSession() {
+
+  const {
+    data: { session }
+  } =
+    await supabaseClient.auth.getSession();
+
+
+  if (session) {
+
+    await checkAdmin();
+
+  }
+
+}
+
+
+checkExistingSession();
+
+</script>
+
+</body>
+</html>
