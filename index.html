@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>RM Streaming Hub</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f7f8;
+      color: #222;
+    }
+
+    header {
+      background: #111;
+      color: white;
+      padding: 18px;
+    }
+
+    header h1 {
+      max-width: 1000px;
+      margin: auto;
+      font-size: 21px;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: auto;
+      padding: 25px 16px;
+    }
+
+    .hero {
+      background: white;
+      border-radius: 18px;
+      padding: 30px 22px;
+      margin-bottom: 22px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.06);
+    }
+
+    .hero h2 {
+      font-size: 30px;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      color: #666;
+      line-height: 1.6;
+    }
+
+    .fan-id {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f0f0f0;
+      border-radius: 12px;
+    }
+
+    .fan-id strong {
+      display: block;
+      margin-top: 5px;
+      font-size: 20px;
+    }
+
+    section {
+      margin-bottom: 28px;
+    }
+
+    section h2 {
+      margin-bottom: 15px;
+    }
+
+    .goals {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+
+    .goal {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 3px 15px rgba(0,0,0,.05);
+    }
+
+    .goal h3 {
+      margin-bottom: 10px;
+    }
+
+    .progress-bar {
+      height: 10px;
+      background: #ddd;
+      border-radius: 20px;
+      overflow: hidden;
+      margin: 12px 0;
+    }
+
+    .progress {
+      width: 0%;
+      height: 100%;
+      background: #222;
+    }
+
+    .empty {
+      background: white;
+      padding: 22px;
+      border-radius: 15px;
+      color: #777;
+      text-align: center;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    button {
+      padding: 13px 18px;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .primary {
+      background: #111;
+      color: white;
+    }
+
+    .secondary {
+      background: #e5e5e5;
+      color: #111;
+    }
+
+    footer {
+      text-align: center;
+      padding: 35px 15px;
+      color: #777;
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>RM STREAMING HUB</h1>
+</header>
+
+<main>
+
+  <div class="hero">
+    <h2>Welcome to RM Streaming Hub</h2>
+
+    <p>
+      A simple place for RM fans to organize weekly
+      streaming, voting and support activities.
+    </p>
+
+    <div class="fan-id">
+      Your Anonymous Fan ID
+      <strong id="fanId">Creating...</strong>
+    </div>
+  </div>
+
+
+  <section>
+    <h2>🎯 This Week's Goals</h2>
+
+    <div class="goals">
+
+      <div class="goal">
+        <h3>🎧 Spotify</h3>
+
+        <div class="progress-bar">
+          <div class="progress" id="spotifyProgress"></div>
+        </div>
+
+        <span id="spotifyCount">0</span> / 105
+      </div>
+
+
+      <div class="goal">
+        <h3>▶️ YouTube</h3>
+
+        <div class="progress-bar">
+          <div class="progress" id="youtubeProgress"></div>
+        </div>
+
+        <span id="youtubeCount">0</span> / 15
+      </div>
+
+
+      <div class="goal">
+        <h3>🎵 YouTube Music</h3>
+
+        <div class="progress-bar">
+          <div class="progress" id="ytMusicProgress"></div>
+        </div>
+
+        <span id="ytMusicCount">0</span> / 105
+      </div>
+
+
+      <div class="goal">
+        <h3>🗳️ Voting</h3>
+
+        <div class="progress-bar">
+          <div class="progress" id="voteProgress"></div>
+        </div>
+
+        <span id="voteCount">0</span> / 50
+      </div>
+
+    </div>
+  </section>
+
+
+  <section>
+    <h2>🎵 Focus Songs</h2>
+
+    <div class="empty">
+      Weekly focus songs will appear here.
+    </div>
+  </section>
+
+
+  <section>
+    <h2>🎧 Focus Playlists</h2>
+
+    <div class="empty">
+      Weekly focus playlists will appear here.
+    </div>
+  </section>
+
+
+  <section>
+    <h2>📊 Your Activity</h2>
+
+    <div class="buttons">
+
+      <button class="primary" onclick="logActivity()">
+        + Log Activity
+      </button>
+
+      <button class="secondary" onclick="viewReport()">
+        Weekly Report
+      </button>
+
+    </div>
+  </section>
+
+
+  <section>
+    <h2>📸 Weekly Proof</h2>
+
+    <div class="empty">
+
+      Proof submission opens according to the weekly schedule.
+
+      <br><br>
+
+      <button class="primary" onclick="submitProof()">
+        Submit Proof
+      </button>
+
+    </div>
+  </section>
+
+</main>
+
+
+<footer>
+  RM Streaming Hub
+</footer>
+
+
+<script>
+
+  function generateFanId() {
+
+    const characters =
+      "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+
+    let id = "RM-";
+
+    for (let i = 0; i < 5; i++) {
+
+      id += characters[
+        Math.floor(
+          Math.random() * characters.length
+        )
+      ];
+
+    }
+
+    return id;
+  }
+
+
+  function getFanId() {
+
+    let id =
+      localStorage.getItem("rmFanId");
+
+    if (!id) {
+
+      id = generateFanId();
+
+      localStorage.setItem(
+        "rmFanId",
+        id
+      );
+
+    }
+
+    return id;
+  }
+
+
+  document.getElementById("fanId")
+    .textContent = getFanId();
+
+
+  function logActivity() {
+
+    alert(
+      "Activity logging will be connected next."
+    );
+
+  }
+
+
+  function viewReport() {
+
+    alert(
+      "Your weekly report will appear here."
+    );
+
+  }
+
+
+  function submitProof() {
+
+    alert(
+      "Weekly proof submission will be connected next."
+    );
+
+  }
+
+</script>
+
+</body>
+</html>
