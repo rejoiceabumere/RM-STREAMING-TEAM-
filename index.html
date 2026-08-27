@@ -92,17 +92,36 @@
       margin-top: 5px;
     }
 
-    .goals {
+    .goals,
+    .summary-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 15px;
       margin-top: 15px;
     }
 
-    .goal {
+    .goal,
+    .summary-box {
       background: #fafafa;
       padding: 18px;
       border-radius: 14px;
+    }
+
+    .summary-box {
+      text-align: center;
+    }
+
+    .summary-number {
+      display: block;
+      font-size: 28px;
+      font-weight: bold;
+      margin-top: 8px;
+    }
+
+    .summary-label {
+      color: #777;
+      font-size: 13px;
+      margin-top: 5px;
     }
 
     .progress-bar {
@@ -242,6 +261,92 @@
       >
         Sign Out
       </button>
+
+    </div>
+
+
+    <!-- ACTIVITY SUMMARY -->
+
+    <div class="card">
+
+      <h2>📈 My Activity Summary</h2>
+
+      <p style="margin-top:8px;color:#666;">
+        Your total recorded activity for the current campaign.
+      </p>
+
+      <div class="summary-grid">
+
+        <div class="summary-box">
+          <span>🎧 Spotify</span>
+          <strong
+            class="summary-number"
+            id="summarySpotify"
+          >
+            0
+          </strong>
+          <div class="summary-label">
+            Streams
+          </div>
+        </div>
+
+
+        <div class="summary-box">
+          <span>▶️ YouTube</span>
+          <strong
+            class="summary-number"
+            id="summaryYoutube"
+          >
+            0
+          </strong>
+          <div class="summary-label">
+            Streams
+          </div>
+        </div>
+
+
+        <div class="summary-box">
+          <span>🎵 YouTube Music</span>
+          <strong
+            class="summary-number"
+            id="summaryYtMusic"
+          >
+            0
+          </strong>
+          <div class="summary-label">
+            Streams
+          </div>
+        </div>
+
+
+        <div class="summary-box">
+          <span>🗳️ Voting</span>
+          <strong
+            class="summary-number"
+            id="summaryVoting"
+          >
+            0
+          </strong>
+          <div class="summary-label">
+            Votes
+          </div>
+        </div>
+
+
+        <div class="summary-box">
+          <span>📊 Total</span>
+          <strong
+            class="summary-number"
+            id="summaryTotal"
+          >
+            0
+          </strong>
+          <div class="summary-label">
+            All activities
+          </div>
+        </div>
+
+      </div>
 
     </div>
 
@@ -751,6 +856,41 @@ async function loadDashboard() {
   });
 
 
+  /* UPDATE ACTIVITY SUMMARY */
+
+  document
+    .getElementById("summarySpotify")
+    .textContent =
+    spotifyTotal;
+
+
+  document
+    .getElementById("summaryYoutube")
+    .textContent =
+    youtubeTotal;
+
+
+  document
+    .getElementById("summaryYtMusic")
+    .textContent =
+    ytMusicTotal;
+
+
+  document
+    .getElementById("summaryVoting")
+    .textContent =
+    votingTotal;
+
+
+  document
+    .getElementById("summaryTotal")
+    .textContent =
+    spotifyTotal +
+    youtubeTotal +
+    ytMusicTotal +
+    votingTotal;
+
+
   /* DISPLAY GOALS */
 
   goals.forEach(goal => {
@@ -814,7 +954,9 @@ async function loadDashboard() {
     document
       .getElementById(countId)
       .textContent =
-      current + " / " + target;
+      current +
+      " / " +
+      target;
 
 
     const percentage =
@@ -829,7 +971,8 @@ async function loadDashboard() {
     document
       .getElementById(progressId)
       .style.width =
-      percentage + "%";
+      percentage +
+      "%";
 
   });
 
@@ -1120,7 +1263,7 @@ async function saveActivity() {
     .value = "";
 
 
-  /* REFRESH DASHBOARD */
+  /* REFRESH EVERYTHING */
 
   await loadDashboard();
 
