@@ -192,8 +192,6 @@
 
   <section id="dashboard" class="hidden">
 
-    <!-- PROFILE -->
-
     <div class="card">
 
       <h2>Welcome! 💜</h2>
@@ -385,16 +383,24 @@
 
 <script>
 
+/* SIGN UP */
+
 async function signUp() {
 
   const email =
-    document.getElementById("email").value.trim();
+    document
+      .getElementById("email")
+      .value
+      .trim();
 
   const password =
-    document.getElementById("password").value;
+    document
+      .getElementById("password")
+      .value;
 
   const message =
-    document.getElementById("authMessage");
+    document
+      .getElementById("authMessage");
 
 
   if (!email || !password) {
@@ -403,13 +409,17 @@ async function signUp() {
       "Please enter your email and password.";
 
     return;
+
   }
 
 
   const { error } =
     await supabaseClient.auth.signUp({
+
       email: email,
+
       password: password
+
     });
 
 
@@ -419,6 +429,7 @@ async function signUp() {
       error.message;
 
     return;
+
   }
 
 
@@ -428,22 +439,33 @@ async function signUp() {
 }
 
 
+/* SIGN IN */
+
 async function signIn() {
 
   const email =
-    document.getElementById("email").value.trim();
+    document
+      .getElementById("email")
+      .value
+      .trim();
 
   const password =
-    document.getElementById("password").value;
+    document
+      .getElementById("password")
+      .value;
 
   const message =
-    document.getElementById("authMessage");
+    document
+      .getElementById("authMessage");
 
 
   const { error } =
     await supabaseClient.auth.signInWithPassword({
+
       email: email,
+
       password: password
+
     });
 
 
@@ -453,6 +475,7 @@ async function signIn() {
       error.message;
 
     return;
+
   }
 
 
@@ -460,6 +483,8 @@ async function signIn() {
 
 }
 
+
+/* SIGN OUT */
 
 async function signOut() {
 
@@ -524,8 +549,11 @@ async function loadDashboard() {
       await supabaseClient
         .from("fan_profiles")
         .insert({
+
           id: user.id,
+
           fan_code: fanCode
+
         })
         .select()
         .single();
@@ -589,48 +617,151 @@ async function loadDashboard() {
   }
 
 
-  /* DISPLAY GOALS */
+  /* LOAD FAN ACTIVITIES */
+
+  const {
+    data: activities,
+    error: activityError
+  } =
+    await supabaseClient
+      .from("activities")
+      .select("platform, amount")
+      .eq("fan_id", user.id)
+      .eq("campaign_id", campaign.id);
+
+
+  if (activityError) {
+
+    console.error(activityError);
+
+    return;
+
+  }
+
+
+  /* CALCULATE TOTALS */
+
+  let spotifyTotal = 0;
+  let youtubeTotal = 0;
+  let ytMusicTotal = 0;
+  let votingTotal = 0;
+
+
+  activities.forEach(activity => {
+
+    const amount =
+      Number(activity.amount) || 0;
+
+
+    if (activity.platform === "Spotify") {
+
+      spotifyTotal += amount;
+
+    }
+
+
+    if (activity.platform === "YouTube") {
+
+      youtubeTotal += amount;
+
+    }
+
+
+    if (activity.platform === "YouTube Music") {
+
+      ytMusicTotal += amount;
+
+    }
+
+
+    if (activity.platform === "Voting") {
+
+      votingTotal += amount;
+
+    }
+
+  });
+
+
+  /* DISPLAY GOALS AND PROGRESS */
 
   goals.forEach(goal => {
 
+    const target =
+      Number(goal.target) || 0;
+
+
+    let current = 0;
+    let countId = null;
+    let progressId = null;
+
+
     if (goal.platform === "Spotify") {
 
-      document
-        .getElementById("spotifyCount")
-        .textContent =
-        "0 / " + goal.target;
+      current = spotifyTotal;
+
+      countId = "spotifyCount";
+
+      progressId = "spotifyProgress";
 
     }
 
 
     if (goal.platform === "YouTube") {
 
-      document
-        .getElementById("youtubeCount")
-        .textContent =
-        "0 / " + goal.target;
+      current = youtubeTotal;
+
+      countId = "youtubeCount";
+
+      progressId = "youtubeProgress";
 
     }
 
 
     if (goal.platform === "YouTube Music") {
 
-      document
-        .getElementById("ytMusicCount")
-        .textContent =
-        "0 / " + goal.target;
+      current = ytMusicTotal;
+
+      countId = "ytMusicCount";
+
+      progressId = "ytMusicProgress";
 
     }
 
 
     if (goal.platform === "Voting") {
 
-      document
-        .getElementById("voteCount")
-        .textContent =
-        "0 / " + goal.target;
+      current = votingTotal;
+
+      countId = "voteCount";
+
+      progressId = "voteProgress";
 
     }
+
+
+    if (!countId) return;
+
+
+    document
+      .getElementById(countId)
+      .textContent =
+      current + " / " + target;
+
+
+    const percentage =
+      target > 0
+        ? Math.min(
+            (current / target) * 100,
+            100
+          )
+        : 0;
+
+
+    document
+      .getElementById(progressId)
+      .style.width =
+      percentage + "%";
 
   });
 
@@ -670,7 +801,8 @@ function generateFanCode() {
 async function saveActivity() {
 
   const message =
-    document.getElementById("activityMessage");
+    document
+      .getElementById("activityMessage");
 
 
   const platform =
@@ -832,10 +964,15 @@ async function saveActivity() {
     .getElementById("activityAmount")
     .value = "";
 
+
+  /* REFRESH DASHBOARD */
+
+  await loadDashboard();
+
 }
 
 
-/* CHECK LOGIN SESSION */
+/* CHECK SESSION */
 
 async function checkSession() {
 
