@@ -192,6 +192,8 @@
 
   <section id="dashboard" class="hidden">
 
+    <!-- PROFILE -->
+
     <div class="card">
 
       <h2>Welcome! 💜</h2>
@@ -233,7 +235,7 @@
             ></div>
           </div>
 
-          <span id="spotifyCount">0</span>
+          <span id="spotifyCount">0 / 0</span>
         </div>
 
 
@@ -247,7 +249,7 @@
             ></div>
           </div>
 
-          <span id="youtubeCount">0</span>
+          <span id="youtubeCount">0 / 0</span>
         </div>
 
 
@@ -261,7 +263,7 @@
             ></div>
           </div>
 
-          <span id="ytMusicCount">0</span>
+          <span id="ytMusicCount">0 / 0</span>
         </div>
 
 
@@ -275,7 +277,7 @@
             ></div>
           </div>
 
-          <span id="voteCount">0</span>
+          <span id="voteCount">0 / 0</span>
         </div>
 
       </div>
@@ -394,6 +396,7 @@ async function signUp() {
   const message =
     document.getElementById("authMessage");
 
+
   if (!email || !password) {
 
     message.textContent =
@@ -402,11 +405,13 @@ async function signUp() {
     return;
   }
 
+
   const { error } =
     await supabaseClient.auth.signUp({
       email: email,
       password: password
     });
+
 
   if (error) {
 
@@ -415,6 +420,7 @@ async function signUp() {
 
     return;
   }
+
 
   message.textContent =
     "Account created! Check your email if confirmation is required.";
@@ -433,11 +439,13 @@ async function signIn() {
   const message =
     document.getElementById("authMessage");
 
+
   const { error } =
     await supabaseClient.auth.signInWithPassword({
       email: email,
       password: password
     });
+
 
   if (error) {
 
@@ -446,6 +454,7 @@ async function signIn() {
 
     return;
   }
+
 
   await loadDashboard();
 
@@ -456,9 +465,11 @@ async function signOut() {
 
   await supabaseClient.auth.signOut();
 
+
   document
     .getElementById("dashboard")
     .classList.add("hidden");
+
 
   document
     .getElementById("authSection")
@@ -467,22 +478,30 @@ async function signOut() {
 }
 
 
+/* LOAD DASHBOARD */
+
 async function loadDashboard() {
 
   const {
     data: { user }
-  } = await supabaseClient.auth.getUser();
+  } =
+    await supabaseClient.auth.getUser();
+
 
   if (!user) return;
+
 
   document
     .getElementById("authSection")
     .classList.add("hidden");
 
+
   document
     .getElementById("dashboard")
     .classList.remove("hidden");
 
+
+  /* LOAD FAN PROFILE */
 
   let { data: profile } =
     await supabaseClient
@@ -497,7 +516,11 @@ async function loadDashboard() {
     const fanCode =
       generateFanCode();
 
-    const { data: newProfile, error } =
+
+    const {
+      data: newProfile,
+      error
+    } =
       await supabaseClient
         .from("fan_profiles")
         .insert({
@@ -507,8 +530,11 @@ async function loadDashboard() {
         .select()
         .single();
 
+
     if (!error) {
+
       profile = newProfile;
+
     }
 
   }
@@ -523,25 +549,116 @@ async function loadDashboard() {
 
   }
 
+
+  /* LOAD ACTIVE CAMPAIGN */
+
+  const {
+    data: campaign,
+    error: campaignError
+  } =
+    await supabaseClient
+      .from("weekly_campaigns")
+      .select("id")
+      .eq("is_active", true)
+      .maybeSingle();
+
+
+  if (campaignError || !campaign) {
+
+    return;
+
+  }
+
+
+  /* LOAD WEEKLY GOALS */
+
+  const {
+    data: goals,
+    error: goalsError
+  } =
+    await supabaseClient
+      .from("weekly_goals")
+      .select("platform, target")
+      .eq("campaign_id", campaign.id);
+
+
+  if (goalsError || !goals) {
+
+    return;
+
+  }
+
+
+  /* DISPLAY GOALS */
+
+  goals.forEach(goal => {
+
+    if (goal.platform === "Spotify") {
+
+      document
+        .getElementById("spotifyCount")
+        .textContent =
+        "0 / " + goal.target;
+
+    }
+
+
+    if (goal.platform === "YouTube") {
+
+      document
+        .getElementById("youtubeCount")
+        .textContent =
+        "0 / " + goal.target;
+
+    }
+
+
+    if (goal.platform === "YouTube Music") {
+
+      document
+        .getElementById("ytMusicCount")
+        .textContent =
+        "0 / " + goal.target;
+
+    }
+
+
+    if (goal.platform === "Voting") {
+
+      document
+        .getElementById("voteCount")
+        .textContent =
+        "0 / " + goal.target;
+
+    }
+
+  });
+
 }
 
+
+/* GENERATE FAN ID */
 
 function generateFanCode() {
 
   const characters =
     "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 
+
   let code = "RM-";
+
 
   for (let i = 0; i < 5; i++) {
 
     code += characters[
       Math.floor(
-        Math.random() * characters.length
+        Math.random() *
+        characters.length
       )
     ];
 
   }
+
 
   return code;
 
@@ -555,15 +672,25 @@ async function saveActivity() {
   const message =
     document.getElementById("activityMessage");
 
+
   const platform =
-    document.getElementById("activityPlatform").value;
+    document
+      .getElementById("activityPlatform")
+      .value;
+
 
   const itemName =
-    document.getElementById("activityItem").value.trim();
+    document
+      .getElementById("activityItem")
+      .value
+      .trim();
+
 
   const amount =
     parseInt(
-      document.getElementById("activityAmount").value
+      document
+        .getElementById("activityAmount")
+        .value
     );
 
 
@@ -573,6 +700,7 @@ async function saveActivity() {
       "Please select a platform.";
 
     return;
+
   }
 
 
@@ -582,6 +710,7 @@ async function saveActivity() {
       "Please enter the song, video or activity.";
 
     return;
+
   }
 
 
@@ -591,12 +720,14 @@ async function saveActivity() {
       "Please enter a valid number.";
 
     return;
+
   }
 
 
   const {
     data: { user }
-  } = await supabaseClient.auth.getUser();
+  } =
+    await supabaseClient.auth.getUser();
 
 
   if (!user) {
@@ -605,12 +736,16 @@ async function saveActivity() {
       "Please sign in first.";
 
     return;
+
   }
 
 
-  /* Find active campaign */
+  /* FIND ACTIVE CAMPAIGN */
 
-  const { data: campaign, error: campaignError } =
+  const {
+    data: campaign,
+    error: campaignError
+  } =
     await supabaseClient
       .from("weekly_campaigns")
       .select("id")
@@ -624,6 +759,7 @@ async function saveActivity() {
       "Unable to load the weekly campaign.";
 
     return;
+
   }
 
 
@@ -633,14 +769,19 @@ async function saveActivity() {
       "There is no active weekly campaign yet.";
 
     return;
+
   }
 
+
+  /* DETERMINE ACTIVITY TYPE */
 
   const activityType =
     platform === "Voting"
       ? "vote"
       : "stream";
 
+
+  /* SAVE ACTIVITY */
 
   const { error } =
     await supabaseClient
@@ -674,6 +815,7 @@ async function saveActivity() {
       error.message;
 
     return;
+
   }
 
 
@@ -685,6 +827,7 @@ async function saveActivity() {
     .getElementById("activityItem")
     .value = "";
 
+
   document
     .getElementById("activityAmount")
     .value = "";
@@ -692,12 +835,15 @@ async function saveActivity() {
 }
 
 
+/* CHECK LOGIN SESSION */
+
 async function checkSession() {
 
   const {
     data: { session }
   } =
     await supabaseClient.auth.getSession();
+
 
   if (session) {
 
